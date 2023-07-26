@@ -1,0 +1,3 @@
+"scripts": {
+  "update-files-json": "node scripts/update-files-json.js"
+}
