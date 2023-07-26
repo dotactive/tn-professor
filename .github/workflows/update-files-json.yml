@@ -1,0 +1,33 @@
+name: Update Files JSON
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update_files_json:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: List text files
+        id: list-files
+        run: |
+          ls -d ./*.txt | sed -e "s/^.\///" > files.txt
+
+      - name: Update files.json
+        run: |
+          echo "{\"files\": [" > files.json
+          cat files.txt | while read filename; do
+            echo "\"$filename\"," >> files.json
+          done
+          sed -i '$ s/,$//' files.json
+          echo "]}" >> files.json
+          git config --global user.name "Your Name"
+          git config --global user.email "your-email@example.com"
+          git add files.json
+          git commit -m "Update files.json" --quiet
+          git push origin main
