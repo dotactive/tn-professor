@@ -19,6 +19,9 @@ jobs:
           ls -d ./*.txt | sed -e "s/^.\///" > files.txt
 
       - name: Update files.json
+        env:
+          GITHUB_EMAIL: treble_l@hotmail.com
+          GITHUB_USER: pinktit
         run: |
           echo "{\"files\": [" > files.json
           cat files.txt | while read filename; do
@@ -26,6 +29,9 @@ jobs:
           done
           sed -i '$ s/,$//' files.json
           echo "]}" >> files.json
+          git config --global user.email "$GITHUB_EMAIL"
+          git config --global user.name "$GITHUB_USER"
           git add files.json
           git commit -m "Update files.json" --quiet
           git push origin main
+
