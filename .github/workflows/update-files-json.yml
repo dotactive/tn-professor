@@ -18,7 +18,7 @@ jobs:
         run: |
           ls -d ./*.txt | sed -e "s/^.\///" > files.txt
 
-      - name: Create files.json
+      - name: Update files.json
         run: |
           echo "{\"files\": [" > files.json
           cat files.txt | while read filename; do
@@ -26,16 +26,8 @@ jobs:
           done
           sed -i '$ s/,$//' files.json
           echo "]}" >> files.json
-
-      - name: Set up Git
-        run: |
           git config --global user.name "Your Name"
           git config --global user.email "your-email@example.com"
-
-      - name: Push changes to files.json
-        run: |
           git add files.json
           git commit -m "Update files.json" --quiet
           git push origin main
-        env:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
