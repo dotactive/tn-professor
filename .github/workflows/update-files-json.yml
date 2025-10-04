@@ -43,8 +43,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "Your Name"
-          git config --global user.email "your-email@example.com"
+          git config --global user.name "rudy"
+          git config --global user.email "treble_l@hotmail.com
           git add cn/files.json tw/files.json
           git commit -m "Update files.json in cn and tw folders" --quiet
           git push origin main
