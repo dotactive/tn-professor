@@ -13,38 +13,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: List text files in CN folder
-        id: list-files-cn
-        run: |
-          ls -d cn/*.txt | sed -e "s/^cn\///" > cn-files.txt
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Update cn/files.json
-        run: |
-          echo "{\"files\": [" > cn/files.json
-          cat cn-files.txt | while read filename; do
-            echo "\"$filename\"," >> cn/files.json
-          done
-          sed -i '$ s/,$//' cn/files.json
-          echo "]}" >> cn/files.json
-
-      - name: List text files in TW folder
-        id: list-files-tw
-        run: |
-          ls -d tw/*.txt | sed -e "s/^tw\///" > tw-files.txt
-
-      - name: Update tw/files.json
-        run: |
-          echo "{\"files\": [" > tw/files.json
-          cat tw-files.txt | while read filename; do
-            echo "\"$filename\"," >> tw/files.json
-          done
-          sed -i '$ s/,$//' tw/files.json
-          echo "]}" >> tw/files.json
+      - name: Update files.json for both folders
+        run: node scripts/update-files-json.js
 
       - name: Commit and push changes
         run: |
           git config --global user.name "rudy"
           git config --global user.email "treble_l@hotmail.com"
           git add cn/files.json tw/files.json
-          git commit -m "Update files.json in cn and tw folders" --quiet
-          git push origin main
+          if ! git diff --staged --quiet; then
+            git commit -m "Update files.json in cn and tw folders" --quiet
+            git pull --rebase origin main
+            git push origin main
+          fi
