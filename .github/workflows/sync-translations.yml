@@ -47,13 +47,14 @@ jobs:
           changedFiles.forEach(file => {
             const filename = path.basename(file);
             const inputPath = path.join('cn', filename);
-            const outputPath = path.join('tw', filename);
+            const translatedFilename = converter(filename);
+            const outputPath = path.join('tw', translatedFilename);
 
             if (fs.existsSync(inputPath)) {
               const content = fs.readFileSync(inputPath, 'utf8');
               const converted = converter(content);
               fs.writeFileSync(outputPath, converted, 'utf8');
-              console.log(`Converted CN to TW: ${filename}`);
+              console.log(`Converted CN to TW: ${filename} -> ${translatedFilename}`);
             }
           });
           EOF
@@ -74,13 +75,14 @@ jobs:
           changedFiles.forEach(file => {
             const filename = path.basename(file);
             const inputPath = path.join('tw', filename);
-            const outputPath = path.join('cn', filename);
+            const translatedFilename = converter(filename);
+            const outputPath = path.join('cn', translatedFilename);
 
             if (fs.existsSync(inputPath)) {
               const content = fs.readFileSync(inputPath, 'utf8');
               const converted = converter(content);
               fs.writeFileSync(outputPath, converted, 'utf8');
-              console.log(`Converted TW to CN: ${filename}`);
+              console.log(`Converted TW to CN: ${filename} -> ${translatedFilename}`);
             }
           });
           EOF
