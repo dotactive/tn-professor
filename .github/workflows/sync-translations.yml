@@ -94,5 +94,8 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add cn/*.txt tw/*.txt
-          git diff --staged --quiet || git commit -m "Auto-sync translations between CN and TW"
-          git push
+          if ! git diff --staged --quiet; then
+            git commit -m "Auto-sync translations between CN and TW"
+            git pull --rebase origin main
+            git push
+          fi
